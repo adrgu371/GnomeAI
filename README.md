@@ -22,9 +22,9 @@ Gnome AI is a cross-platform AI chat application built with Python, utilizing th
 - **Internet Connection**: Required for downloading dependencies and Ollama.
 - **Administrative Privileges**: May be required for installing Ollama on Linux/macOS.
 
-### Step 1: Clone the Repository
 
 ```bash
+### Step 1: Clone the Repository
 git clone https://github.com/[YourGitHubUsername]/gnome-ai.git
 cd gnome-ai
 
