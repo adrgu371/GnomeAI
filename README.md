@@ -4,7 +4,7 @@ Gnome AI is a cross-platform AI chat application built with Python, utilizing th
 
 ## Features
 
-- **Local AI Chat**: Powered by LLaMA3.2 (via Ollama) for privacy-focused, on-device inference.
+- **Local AI Chat**: Powered by LLaMA3.2 (via Ollama) for privacy-focused, on-device inference or any model you want to use.
 - **Web Search Integration**: Use the Brave Search API to fetch real-time web data (requires an API key).
 - **File Upload Support**: Upload and analyze text files, PDFs, Word documents, and Excel files.
 - **Cross-Platform**: Compatible with Windows, Linux, and macOS.
