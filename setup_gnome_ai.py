@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Setup script for Gnome AI to install dependencies and Ollama
 #
-# Copyright (C) 2025 [Your Name]
-#
+# Copyright (C) 2025 Gulas Adrian
+
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
