@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-
+# Gnome AI with Qwen2.5 and AI_Best.py features, no MLX, for Linux x86, single chat
+#
 # Copyright (C) 2025 [Your Name]
 #
 # This program is free software: you can redistribute it and/or modify
@@ -54,7 +55,7 @@ TEMPERATURE = 0.3
 TOP_P = 0.5
 MAX_TOKENS = 1500
 cache = TTLCache(maxsize=100, ttl=3600)
-CURRENT_DATE = "April 06, 2025"
+CURRENT_DATE = datetime.now().strftime("%B %d, %Y")
 
 logging.basicConfig(filename='gnome_ai.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger()
