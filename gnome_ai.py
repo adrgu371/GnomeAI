@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-# Gnome AI with Qwen2.5 and AI_Best.py features, no MLX, for Linux x86, single chat
-#
-# Copyright (C) 2025 Gulas Adrian
+
+# Copyright (C) 2025 [Your Name]
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +28,7 @@ from cachetools import TTLCache
 import json
 from datetime import datetime
 import customtkinter as ctk
-from tkinter import scrolledtext, filedialog, messagebox, font, Menu
+from tkinter import scrolledtext, filedialog, messagebox, font, Menu, Toplevel, Entry
 from PIL import Image
 import re
 import threading
@@ -199,6 +198,81 @@ def read_file(file_path):
         df = pd.read_excel(file_path)
         return df.to_string(index=False)
     return "Unsupported file type."
+
+class CustomInputDialog(ctk.CTkToplevel):
+    def __init__(self, parent, title="Input", text="Enter your input:"):
+        super().__init__(parent)
+        self.title(title)
+        self.geometry("400x200")
+        self.resizable(False, False)
+        self.transient(parent)  # Make dialog modal
+        self.grab_set()  # Focus on dialog
+
+        # Label
+        self.label = ctk.CTkLabel(self, text=text, font=("Arial", 14))
+        self.label.pack(pady=10)
+
+        # Entry
+        self.entry = ctk.CTkEntry(self, width=300)
+        self.entry.pack(pady=10)
+        self.entry.focus()
+
+        # Buttons
+        self.button_frame = ctk.CTkFrame(self)
+        self.button_frame.pack(pady=10)
+
+        self.ok_button = ctk.CTkButton(self.button_frame, text="OK", command=self._ok)
+        self.ok_button.pack(side="left", padx=5)
+
+        self.cancel_button = ctk.CTkButton(self.button_frame, text="Cancel", command=self._cancel)
+        self.cancel_button.pack(side="left", padx=5)
+
+        # Setup copy-paste menu
+        self.setup_entry_menu()
+
+        self.result = None
+
+    def setup_entry_menu(self):
+        self.entry_menu = Menu(self.entry, tearoff=0)
+        self.entry_menu.add_command(label="Copy", command=self.copy_text)
+        self.entry_menu.add_command(label="Paste", command=self.paste_text)
+
+        if platform.system() == "Darwin":
+            self.entry.bind("<Button-2>", self.show_entry_menu)
+            self.entry.bind("<Control-Button-1>", self.show_entry_menu)
+        else:
+            self.entry.bind("<Button-3>", self.show_entry_menu)
+
+    def show_entry_menu(self, event):
+        self.entry_menu.tk_popup(event.x_root, event.y_root)
+
+    def copy_text(self):
+        try:
+            selected_text = self.entry.get()
+            self.clipboard_clear()
+            self.clipboard_append(selected_text)
+        except:
+            pass
+
+    def paste_text(self):
+        try:
+            clipboard_text = self.clipboard_get()
+            self.entry.delete(0, "end")
+            self.entry.insert(0, clipboard_text)
+        except:
+            pass
+
+    def _ok(self):
+        self.result = self.entry.get()
+        self.destroy()
+
+    def _cancel(self):
+        self.result = None
+        self.destroy()
+
+    def get_input(self):
+        self.wait_window()
+        return self.result
 
 class ChatOnlyAIApp(ctk.CTk):
     def __init__(self):
@@ -394,20 +468,7 @@ class ChatOnlyAIApp(ctk.CTk):
 
     def set_brave_api_key(self):
         global BRAVE_API_KEY, config
-        dialog = ctk.CTkInputDialog(title="Set Brave API Key", text="Enter your Brave API Key:")
-        entry = dialog.entry  # Access the entry widget from CTkInputDialog
-
-        # Add right-click menu for copy-paste
-        api_menu = Menu(entry, tearoff=0)
-        api_menu.add_command(label="Copy", command=lambda: self.copy_api_key(entry))
-        api_menu.add_command(label="Paste", command=lambda: self.paste_api_key(entry))
-        
-        if platform.system() == "Darwin":
-            entry.bind("<Button-2>", lambda event: api_menu.tk_popup(event.x_root, event.y_root))
-            entry.bind("<Control-Button-1>", lambda event: api_menu.tk_popup(event.x_root, event.y_root))
-        else:
-            entry.bind("<Button-3>", lambda event: api_menu.tk_popup(event.x_root, event.y_root))
-
+        dialog = CustomInputDialog(self, title="Set Brave API Key", text="Enter your Brave API Key:")
         api_key = dialog.get_input()
         if api_key:
             BRAVE_API_KEY = api_key.strip()
@@ -415,22 +476,6 @@ class ChatOnlyAIApp(ctk.CTk):
             with open(CONFIG_FILE, "w") as f:
                 json.dump(config, f, indent=4)
             self.type_text("Brave API Key successfully added.\n\n")
-
-    def copy_api_key(self, entry):
-        try:
-            selected_text = entry.get()
-            self.clipboard_clear()
-            self.clipboard_append(selected_text)
-        except:
-            pass
-
-    def paste_api_key(self, entry):
-        try:
-            clipboard_text = self.clipboard_get()
-            entry.delete(0, "end")
-            entry.insert(0, clipboard_text)
-        except:
-            pass
 
     def stop_response(self):
         self.stop_typing = True
