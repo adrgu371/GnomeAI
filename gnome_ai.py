@@ -1,7 +1,5 @@
-#!/usr/bin/env python3
-# Gnome AI with Qwen2.5 and AI_Best.py features, no MLX, for Linux x86, single chat
-#
-# Copyright (C) 2025 [Your Name]
+
+# Copyright (C) 2025 Gulas Adrian
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
